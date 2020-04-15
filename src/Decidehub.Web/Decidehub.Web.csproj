@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+      <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>aspnet-Decidehub.Web-6026DD45-BB05-4171-9C3D-FE64122D331E</UserSecretsId>
+      <LangVersion>latest</LangVersion>
+      <RootNamespace>Decidehub.Web</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>Decidehub.Web.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DocumentationFile>bin\Release\Decidehub.Web.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Views\Shared\CustomUIIndex.Swagger.index.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="CoreCompat.System.Drawing.v2" Version="5.2.0-preview1-r131" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.10" />
+    <PackageReference Include="Hangfire.Console" Version="1.4.2" />
+    <PackageReference Include="Hangfire.Core" Version="1.7.10" />
+    <PackageReference Include="Hangfire.PostgreSql" Version="1.6.4.2" />
+    <PackageReference Include="Localization.AspNetCore.TagHelpers" Version="0.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" PrivateAssets="All" />
+    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.1.0" />
+    <PackageReference Include="MiniProfiler.EntityFrameworkCore" Version="4.1.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.3" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0002" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.3.1" />
+      <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.23" />
+  </ItemGroup>
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Decidehub.Core\Decidehub.Core.csproj" />
+    <ProjectReference Include="..\Decidehub.Infrastructure\Decidehub.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\EmailTemplates\mail.html" />
+  </ItemGroup>
+</Project>

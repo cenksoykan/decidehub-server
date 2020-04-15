@@ -1,0 +1,25 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS builder
+
+WORKDIR /Decidehub.Core
+COPY src/Decidehub.Core/Decidehub.Core.csproj Decidehub.Core.csproj
+RUN dotnet restore
+WORKDIR /Decidehub.Infrastructure
+COPY src/Decidehub.Infrastructure/Decidehub.Infrastructure.csproj Decidehub.Infrastructure.csproj
+RUN dotnet restore
+WORKDIR /Decidehub.Web
+COPY src/Decidehub.Web/Decidehub.Web.csproj Decidehub.Web.csproj
+RUN dotnet restore
+WORKDIR /tests
+COPY tests/UnitTests/UnitTests.csproj UnitTests.csproj
+RUN dotnet restore
+
+WORKDIR .
+COPY src/ src
+COPY tests/ tests
+RUN dotnet publish src/Decidehub.Web/Decidehub.Web.csproj --output /app/ --configuration Release
+RUN dotnet test /p:CollectCoverage=true tests/UnitTests/UnitTests.csproj
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+WORKDIR /app
+COPY --from=builder /app .
+ENTRYPOINT ["dotnet", "Decidehub.Web.dll"]
