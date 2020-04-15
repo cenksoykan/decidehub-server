@@ -1,7 +1,7 @@
 build-master:
   stage: build
   script:
-    - docker build -f Dockerfile.web -t edelkrone/mnglyapp .
+    - docker build -f Dockerfile.web -t decidehub/mnglyapp .
   only:
     - master
 deploy-master:
@@ -9,13 +9,13 @@ deploy-master:
   script:
     - docker stop --time 30 mngly
     - docker rm mngly
-    - docker run -p 5000:80 -e SendGridApiKey -e PostgreSqlConnection --restart always --name mngly -d edelkrone/mnglyapp
+    - docker run -p 5000:80 -e SendGridApiKey -e PostgreSqlConnection --restart always --name mngly -d decidehub/mnglyapp
   only:
     - master
 build-staging:
   stage: build
   script:
-    - docker build -f Dockerfile.web -t edelkrone/mnglystaging .
+    - docker build -f Dockerfile.web -t decidehub/mnglystaging .
   only:
     - staging
 deploy-staging:
@@ -23,6 +23,6 @@ deploy-staging:
   script:
     - docker stop --time 30 mnglystaging
     - docker rm mnglystaging
-    - docker run -p 5001:80 -e SendGridApiKey -e PostgreSqlConnection --restart always --name mnglystaging -d edelkrone/mnglystaging
+    - docker run -p 5001:80 -e SendGridApiKey -e PostgreSqlConnection --restart always --name mnglystaging -d decidehub/mnglystaging
   only:
     - staging
