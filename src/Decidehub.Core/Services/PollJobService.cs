@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using Decidehub.Core.Entities;
 using Decidehub.Core.Enums;
 using Decidehub.Core.Interfaces;
-using Hangfire.Console;
-using Hangfire.Server;
 using MoreLinq;
 using Newtonsoft.Json;
 
@@ -64,17 +62,15 @@ namespace Decidehub.Core.Services
 
         #region PollCompletionMethods
 
-        public async Task CheckPollCompletion(PerformContext context = null)
+        public async Task CheckPollCompletion()
         {
             if (!await PollFinishedSemaphore.WaitAsync(1000)) return;
             try
             {
-                context?.WriteLine("Getting polls");
                 var activePolls = await _pollService.GetActivePolls(true);
                 var now = DateTime.UtcNow;
                 foreach (var poll in activePolls)
                 {
-                    context?.WriteLine($"Completing poll {poll.Name}");
                     var voterCount = poll.PollType == PollTypes.AuthorityPoll
                         ? (await _userService.GetUsersAsync(poll.TenantId)).Count(u => u.EmailConfirmed)
                         : await _userService.GetVoterCount(poll.TenantId);
@@ -114,16 +110,15 @@ namespace Decidehub.Core.Services
 
                     if (poll.PolicyId != null)
                     {
-                        context?.WriteLine($"Updating policy with id {poll.PolicyId}");
                         await CalculatePolicyChangePercentage(poll.Id, poll.PolicyId.Value, votes);
                     }
 
                     await _pollService.NotifyUsers(poll.PollType, PollNotificationTypes.Ended, poll);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                context?.WriteLine(e.ToString());
+                // ignored
             }
             finally
             {

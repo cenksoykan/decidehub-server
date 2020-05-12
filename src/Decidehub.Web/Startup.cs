@@ -15,7 +15,6 @@ using Decidehub.Web.Interfaces;
 using Decidehub.Web.Models;
 using Decidehub.Web.Services;
 using Hangfire;
-using Hangfire.Console;
 using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -81,11 +80,7 @@ namespace Decidehub.Web
 
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
 
-            services.AddHangfire(x =>
-            {
-                x.UsePostgreSqlStorage(Configuration["PostgreSqlConnection"]);
-                x.UseConsole();
-            });
+            services.AddHangfire(x => { x.UsePostgreSqlStorage(Configuration["PostgreSqlConnection"]); });
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -318,7 +313,7 @@ namespace Decidehub.Web
                 var culture = "tr-TR";
 
                 foreach (var recurringJob in services)
-                    Hangfire.RecurringJob.AddOrUpdate(() => recurringJob.RunWithCulture(null, culture),
+                    Hangfire.RecurringJob.AddOrUpdate(() => recurringJob.RunWithCulture(culture),
                         recurringJob.CronExpression);
             }
         }

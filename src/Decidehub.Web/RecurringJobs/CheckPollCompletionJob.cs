@@ -15,9 +15,9 @@ namespace Decidehub.Web.RecurringJobs
 
         public override string CronExpression => "* * * * *";
 
-        protected override async Task RunAsync(PerformContext context)
+        protected override async Task RunAsync()
         {
-            await _pollJobService.CheckPollCompletion(context);
+            await _pollJobService.CheckPollCompletion();
         }
     }
 }

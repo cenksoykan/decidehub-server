@@ -18,7 +18,6 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="CoreCompat.System.Drawing.v2" Version="5.2.0-preview1-r131" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.10" />
-    <PackageReference Include="Hangfire.Console" Version="1.4.2" />
     <PackageReference Include="Hangfire.Core" Version="1.7.10" />
     <PackageReference Include="Hangfire.PostgreSql" Version="1.6.4.2" />
     <PackageReference Include="Localization.AspNetCore.TagHelpers" Version="0.6.0" />

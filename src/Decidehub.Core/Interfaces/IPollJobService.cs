@@ -5,7 +5,7 @@ namespace Decidehub.Core.Interfaces
 {
     public interface IPollJobService
     {
-        Task CheckPollCompletion(PerformContext context = null);
+        Task CheckPollCompletion();
         Task AuthorityPollStart();
     }
 }

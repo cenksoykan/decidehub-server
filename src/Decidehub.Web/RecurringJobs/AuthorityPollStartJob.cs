@@ -15,7 +15,7 @@ namespace Decidehub.Web.RecurringJobs
             _pollJobService = pollJobService;
         }
 
-        protected override async Task RunAsync(PerformContext context)
+        protected override async Task RunAsync()
         {
             await _pollJobService.AuthorityPollStart();
         }
