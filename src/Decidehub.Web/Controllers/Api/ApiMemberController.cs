@@ -3,14 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Decidehub.Web.Interfaces;
 using Decidehub.Web.ViewModels.Api;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Decidehub.Web.Controllers.Api
 {
     [Route("api/v1/members")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class MemberController : Controller
     {
         private readonly IUserApiViewModelService _userViewModelService;
