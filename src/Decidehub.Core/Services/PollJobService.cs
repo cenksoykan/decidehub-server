@@ -243,25 +243,23 @@ namespace Decidehub.Core.Services
             var pollVoterIds = pollVoters.Select(p => p.Id).ToList();
             if (pollVoters.Count >= 3)
             {
-                var pollNotVotedUsers = (await _userService.GetUsersAsync(poll.TenantId))
-                    .Where(x => !pollVoterIds.Contains(x.Id))
-                    .Select(x => x.Id)
-                    .ToList();
                 var finalScores = pollVoters.ToDictionary(v => v.Id, v => 0.0M);
 
                 var scores = pollVoters.ToDictionary(v => v.Id, v => v.UserDetail.InitialAuthorityPercent);
 
                 if (scores.All(s => s.Value <= 0)) scores = pollVoters.ToDictionary(v => v.Id, v => 100M);
 
+                var allUsers = await _userService.GetUsersAsync(poll.TenantId);
+                
                 for (var round = 1; round <= 3; round++)
                 {
                     var roundScores =
-                        (await _userService.GetUsersAsync(poll.TenantId)).ToDictionary(v => v.Id, v => 0.0M);
+                        allUsers.ToDictionary(v => v.Id, v => 0.0M);
+                    
                     foreach (var vote in pollVotes.Where(v => v.VoterId != v.VotedUserId))
                     {
                         if (vote.VotedUserId == null
-                            || !pollVoterIds.Contains(vote.VotedUserId)
-                            || pollNotVotedUsers.Contains(vote.VotedUserId))
+                            || !pollVoterIds.Contains(vote.VotedUserId))
                             continue;
                         var score = scores[vote.VoterId];
                         roundScores[vote.VotedUserId] += score * vote.Value.GetValueOrDefault() / 1000.0M;
@@ -271,7 +269,7 @@ namespace Decidehub.Core.Services
                     scores = roundScores;
                 }
 
-                var topScores = finalScores.OrderByDescending(s => s.Value).Take(20).ToList();
+                var topScores = finalScores.OrderByDescending(s => s.Value).ToList();
 
                 var totalAuthority = Math.Max(1, topScores.Sum(s => s.Value));
 
