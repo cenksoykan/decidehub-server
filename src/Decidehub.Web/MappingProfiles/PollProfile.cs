@@ -84,7 +84,9 @@ namespace Decidehub.Web.MappingProfiles
                 .ForMember(dest => dest.Description, opts => opts.MapFrom(src => src.QuestionBody))
                 .ForMember(dest => dest.MultipleChoiceResult,
                     opts => opts.MapFrom(src =>
-                        src.PollType == PollTypes.MultipleChoicePoll ? src.OptionsJsonString : null))
+                        src.PollType == PollTypes.MultipleChoicePoll || src.PollType == PollTypes.SharePoll
+                            ? src.OptionsJsonString
+                            : null))
                 .ForMember(dest => dest.PolicyId,
                     opts => opts.MapFrom(src =>
                         src is PolicyChangePoll ? ((PolicyChangePoll) src).PolicyId : (long?) null))
@@ -186,8 +188,8 @@ namespace Decidehub.Web.MappingProfiles
                 return PollResults.Negative.DescriptionLang("tr");
             else if (result == "Olumlu" || result == PollResults.Positive.ToString())
                 return PollResults.Positive.DescriptionLang("tr");
-            else if (result == "Yetersiz yetki oranı sebebiyle tamamlanamadı" ||
-                result == PollResults.InsufficientAuthority.ToString())
+            else if (result == "Yetersiz yetki oranı sebebiyle tamamlanamadı"
+                     || result == PollResults.InsufficientAuthority.ToString())
                 return PollResults.InsufficientAuthority.DescriptionLang("tr");
             else return result;
         }
