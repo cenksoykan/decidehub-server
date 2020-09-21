@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -148,7 +149,8 @@ namespace Decidehub.Core.Services
             if (totalShare <= 0) totalShare = 1;
             var shareMultiplier = 1.0M / totalShare;
 
-            var results = options.Select(option => $"{option}: {sharePercents[option] * shareMultiplier:P}".Trim())
+            var results = options.Select(option =>
+                    $"{option}: {(sharePercents[option] * shareMultiplier).ToString("P", new CultureInfo("tr"))}")
                 .ToList();
             await _pollService.SetPollResult(poll.Id, string.Join("\n", results));
         }

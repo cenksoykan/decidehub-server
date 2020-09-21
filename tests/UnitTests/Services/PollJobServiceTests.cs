@@ -239,7 +239,7 @@ namespace UnitTests.Services
             await _pollJobService.CheckPollCompletion();
             var getPoll = _context.Polls.FirstOrDefault(p => p.Id == poll.Id);
             Assert.NotNull(getPoll);
-            Assert.Equal("test2: 0.00%\ntest1: 30.00%\ntest3: 70.00%\ntest4: 0.00%", getPoll.Result);
+            Assert.Equal("test2: %0,00\ntest1: %30,00\ntest3: %70,00\ntest4: %0,00", getPoll.Result);
         }
 
         [Fact]
