@@ -148,7 +148,8 @@ namespace Decidehub.Core.Services
             if (totalShare <= 0) totalShare = 1;
             var shareMultiplier = 1.0M / totalShare;
 
-            var results = options.Select(option => $"{option}: {sharePercents[option] * shareMultiplier:P}").ToList();
+            var results = options.Select(option => $"{option}: {sharePercents[option] * shareMultiplier:P}".Trim())
+                .ToList();
             await _pollService.SetPollResult(poll.Id, string.Join("\n", results));
         }
 
