@@ -63,14 +63,6 @@ namespace Decidehub.Web.Services
             return poll;
         }
 
-        public PolicyChangePollViewModel PolicyChangePollToViewModel(PolicyChangePoll poll)
-        {
-            PolicyChangePollViewModel model = null;
-            if (poll != null) model = _mapper.Map<PolicyChangePoll, PolicyChangePollViewModel>(poll);
-
-            return model;
-        }
-
         public async Task<Poll> NewMultipleChoicePoll(MultipleChoicePollViewModel model)
         {
             var poll = new MultipleChoicePoll
@@ -91,7 +83,6 @@ namespace Decidehub.Web.Services
         {
             MultipleChoicePollViewModel model = null;
             if (poll != null) model = _mapper.Map<MultipleChoicePoll, MultipleChoicePollViewModel>(poll);
-            // model.Options = JsonConvert.DeserializeObject<List<string>>(poll.OptionsJsonString);
 
             return model;
         }

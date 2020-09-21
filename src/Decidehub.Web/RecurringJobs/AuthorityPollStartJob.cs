@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Decidehub.Core.Interfaces;
-using Hangfire.Server;
 
 namespace Decidehub.Web.RecurringJobs
 {

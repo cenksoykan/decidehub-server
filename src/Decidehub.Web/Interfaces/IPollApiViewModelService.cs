@@ -10,7 +10,6 @@ namespace Decidehub.Web.Interfaces
         Task<PolicyChangePoll> NewPolicyChangePoll(PolicyChangePollViewModel model);
         Task<AuthorityPoll> NewAuthorityPoll(AuthorityPollViewModel model);
         MultipleChoicePollViewModel MultipleChoicePollToViewModel(MultipleChoicePoll poll);
-        PolicyChangePollViewModel PolicyChangePollToViewModel(PolicyChangePoll poll);
         Task<Poll> NewMultipleChoicePoll(MultipleChoicePollViewModel model);
         Task SaveAuthorityVote(AuthorityPollSaveViewModel model, string voterId);
         Task<Poll> NewSharePoll(SharePollViewModel model);

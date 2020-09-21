@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Decidehub.Core.Entities;
-using Decidehub.Core.Enums;
 using Decidehub.Core.Identity;
 using Decidehub.Infrastructure.Data;
 using Decidehub.Infrastructure.Data.Repositories;
