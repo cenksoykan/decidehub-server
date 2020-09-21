@@ -194,6 +194,100 @@ namespace UnitTests.Services
         }
 
         [Fact]
+        public async Task Should_Calculate_SharePoll_Result()
+        {
+            var tenant = new Tenant
+            {
+                Id = "test",
+                HostName = "test.decidehub.com",
+                InActive = false,
+                Lang = "tr"
+            };
+            _tenantsDbContext.Tenants.Add(tenant);
+            _tenantsDbContext.SaveChanges();
+            var option = new List<string> {"test2", "test1", "test3", "test4"};
+            var poll = new SharePoll
+            {
+                Name = "test",
+                Active = true,
+                CreateTime = DateTime.UtcNow.AddHours(-12),
+                QuestionBody = "test dfs",
+                TenantId = "test",
+                Deadline = DateTime.UtcNow.AddHours(-1),
+                OptionsJsonString = JsonConvert.SerializeObject(option)
+            };
+            _context.Polls.Add(poll);
+            _context.Users.Add(new ApplicationUser
+            {
+                Email = "test@workhow.com",
+                FirstName = "test",
+                LastName = "Test",
+                TenantId = "test",
+                CreatedAt = DateTime.UtcNow,
+                SecurityStamp = new Guid().ToString(),
+                EmailConfirmed = false,
+                Id = 1.ToString(),
+                IsDeleted = false,
+                UserDetail = new UserDetail {AuthorityPercent = 1, LanguagePreference = "tr"}
+            });
+            _context.SaveChanges();
+
+            _context.Votes.Add(new Vote {PollId = poll.Id, Value = 70, VotedUserId = "test3", VoterId = 1.ToString()});
+            _context.Votes.Add(new Vote {PollId = poll.Id, Value = 0, VotedUserId = "test2", VoterId = 1.ToString()});
+            _context.Votes.Add(new Vote {PollId = poll.Id, Value = 30, VotedUserId = "test1", VoterId = 1.ToString()});
+            _context.SaveChanges();
+            await _pollJobService.CheckPollCompletion();
+            var getPoll = _context.Polls.FirstOrDefault(p => p.Id == poll.Id);
+            Assert.NotNull(getPoll);
+            Assert.Equal("test2: 0.00%\ntest1: 30.00%\ntest3: 70.00%\ntest4: 0.00%", getPoll.Result);
+        }
+
+        [Fact]
+        public async Task Should_Calculate_EmptySharePoll_Result()
+        {
+            var tenant = new Tenant
+            {
+                Id = "test",
+                HostName = "test.decidehub.com",
+                InActive = false,
+                Lang = "tr"
+            };
+            _tenantsDbContext.Tenants.Add(tenant);
+            _tenantsDbContext.SaveChanges();
+            var option = new List<string> {"test2", "test1", "test3", "test4"};
+            var poll = new SharePoll
+            {
+                Name = "test",
+                Active = true,
+                CreateTime = DateTime.UtcNow.AddHours(-12),
+                QuestionBody = "test dfs",
+                TenantId = "test",
+                Deadline = DateTime.UtcNow.AddHours(-1),
+                OptionsJsonString = JsonConvert.SerializeObject(option)
+            };
+            _context.Polls.Add(poll);
+            _context.Users.Add(new ApplicationUser
+            {
+                Email = "test@workhow.com",
+                FirstName = "test",
+                LastName = "Test",
+                TenantId = "test",
+                CreatedAt = DateTime.UtcNow,
+                SecurityStamp = new Guid().ToString(),
+                EmailConfirmed = false,
+                Id = 1.ToString(),
+                IsDeleted = false,
+                UserDetail = new UserDetail {AuthorityPercent = 1, LanguagePreference = "tr"}
+            });
+            _context.SaveChanges();
+
+            await _pollJobService.CheckPollCompletion();
+            var getPoll = _context.Polls.FirstOrDefault(p => p.Id == poll.Id);
+            Assert.NotNull(getPoll);
+            Assert.Equal(PollResults.InsufficientAuthority.ToString(), getPoll.Result);
+        }
+
+        [Fact]
         public async Task Should_Calculate_MultipleChoicePoll_Result()
         {
             var tenant = new Tenant

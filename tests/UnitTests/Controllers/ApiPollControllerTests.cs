@@ -160,6 +160,32 @@ namespace UnitTests.Controllers
             Assert.Equal(PollListTypes.UserNotVoted.ToString().FirstCharacterToLower(), actionResultObj.ListType);
             Assert.Equal(JsonConvert.DeserializeObject(poll.OptionsJsonString), actionResultObj.Options);
         }
+        
+        [Fact]
+        public async Task Should_Get_SharePollValues()
+        {
+            var poll = new SharePoll
+            {
+                Name = "test",
+                OptionsJsonString = JsonConvert.SerializeObject(new List<string> {"a", "b", "c"}),
+                Active = true,
+                CreateTime = DateTime.UtcNow,
+                Deadline = DateTime.UtcNow.AddDays(2)
+            };
+
+            _context.SharePolls.Add(poll);
+            _context.SaveChanges();
+            var result = await _controller.GetPollValues(poll.Id);
+            var actionResult = Assert.IsType<OkObjectResult>(result);
+            var actionResultObj = actionResult.Value as SharePollViewModel;
+            Assert.NotNull(actionResultObj);
+            Assert.Equal(poll.Id, actionResultObj.PollId);
+            Assert.Equal(poll.Name, actionResultObj.Name);
+            Assert.Equal(poll.Deadline, actionResultObj.Deadline);
+            Assert.Equal(poll.QuestionBody, actionResultObj.Description);
+            Assert.Equal(PollListTypes.UserNotVoted.ToString().FirstCharacterToLower(), actionResultObj.ListType);
+            Assert.Equal(JsonConvert.DeserializeObject(poll.OptionsJsonString), actionResultObj.Options);
+        }
 
         [Fact]
         public async Task Should_Get_PolicyChangePollValues()

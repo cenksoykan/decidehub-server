@@ -171,8 +171,13 @@ namespace Decidehub.Web.Controllers.Api
                 val.ListType = await SetListType(poll);
                 return Ok(val);
             }
-
-            if (pollType == typeof(SharePoll)) return Ok();
+            
+            if (pollType == typeof(SharePoll))
+            {
+                var val = _pollViewModelService.SharePollToViewModel((SharePoll) poll);
+                val.ListType = await SetListType(poll);
+                return Ok(val);
+            }
 
             return BadRequest(Errors.GetSingleErrorList("", _localizer["UnknownPoll"]));
         }

@@ -1,8 +1,8 @@
 ﻿namespace Decidehub.Web.ViewModels.Api
 {
-    public class SharePollUserValuesViewModel
+    public class SharePollVoteValuesModel
     {
-        public string UserId { get; set; }
+        public string Option { get; set; }
         public long SharePercent { get; set; }
     }
 }

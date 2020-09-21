@@ -137,25 +137,19 @@ namespace Decidehub.Core.Services
 
         private async Task CalculateShares(Poll poll, IList<Vote> votes)
         {
-            var allUsers = await _userService.GetUsersAsync(poll.TenantId);
+            var options = JsonConvert.DeserializeObject<List<string>>(poll.OptionsJsonString);
 
-            var results = new Dictionary<string, decimal>();
+            var sharePercents = new Dictionary<string, decimal>();
 
-            foreach (var user in allUsers)
-                results[user.Id] = ShareMultiplier(votes.Where(v => v.VotedUserId == user.Id));
+            foreach (var option in options)
+                sharePercents[option] = ShareMultiplier(votes.Where(v => v.VotedUserId == option));
 
-            var totalShare = results.Sum(s => s.Value);
+            var totalShare = sharePercents.Sum(s => s.Value);
             if (totalShare <= 0) totalShare = 1;
             var shareMultiplier = 1.0M / totalShare;
-            var result = "";
 
-            foreach (var user in allUsers.OrderBy(u => u.FirstName).ThenBy(u => u.LastName))
-            {
-                var userShare = results[user.Id] * shareMultiplier;
-                result += $"{user.FirstName} {user.LastName}: {userShare:P}\n";
-            }
-
-            await _pollService.SetPollResult(poll.Id, result);
+            var results = options.Select(option => $"{option}: {sharePercents[option] * shareMultiplier:P}").ToList();
+            await _pollService.SetPollResult(poll.Id, string.Join("\n", results));
         }
 
         private async Task CalculatePolicyChangePercentage(long pollId, long policyId, IReadOnlyCollection<Vote> votes)
@@ -250,12 +244,12 @@ namespace Decidehub.Core.Services
                 if (scores.All(s => s.Value <= 0)) scores = pollVoters.ToDictionary(v => v.Id, v => 100M);
 
                 var allUsers = await _userService.GetUsersAsync(poll.TenantId);
-                
+
                 for (var round = 1; round <= 3; round++)
                 {
                     var roundScores =
                         allUsers.ToDictionary(v => v.Id, v => 0.0M);
-                    
+
                     foreach (var vote in pollVotes.Where(v => v.VoterId != v.VotedUserId))
                     {
                         if (vote.VotedUserId == null

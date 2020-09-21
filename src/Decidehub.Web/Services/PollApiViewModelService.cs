@@ -87,6 +87,14 @@ namespace Decidehub.Web.Services
             return model;
         }
 
+        public SharePollViewModel SharePollToViewModel(SharePoll poll)
+        {
+            SharePollViewModel model = null;
+            if (poll != null) model = _mapper.Map<SharePoll, SharePollViewModel>(poll);
+
+            return model;
+        }
+
         public async Task SaveAuthorityVote(AuthorityPollSaveViewModel model, string voterId)
         {
             var votes = model.Votes.Select(item => new Vote
@@ -106,19 +114,20 @@ namespace Decidehub.Web.Services
                 Active = true,
                 Name = model.Name,
                 TenantId = _tenantProvider.GetTenantId(),
+                OptionsJsonString = JsonConvert.SerializeObject(model.Options),
                 QuestionBody = model.Description
             };
             await _pollService.AddPoll(poll);
             return poll;
         }
 
-        public async Task SaveSharePoll(SharePollViewModel model)
+        public async Task SaveSharePollVotes(SharePollVoteModel model)
         {
-            var votes = model.Users.Select(item => new Vote
+            var votes = model.Options.Select(item => new Vote
             {
                 PollId = model.PollId,
                 VoterId = model.UserId,
-                VotedUserId = item.UserId,
+                VotedUserId = item.Option,
                 Value = item.SharePercent
             });
             await _voteService.AddVotes(votes);
@@ -147,9 +156,11 @@ namespace Decidehub.Web.Services
 
                 var voters = (await _voteService.GetVotesByPoll(pollId)).Select(x => x.VoterId).Distinct();
                 model.NotVotedUsers = allUsers.Where(x => !voters.Contains(x.Id))
-                    .Select(x => new {UserId = x.Id, UserName = $"{x.FirstName} {x.LastName}"}).ToList();
+                    .Select(x => new {UserId = x.Id, UserName = $"{x.FirstName} {x.LastName}"})
+                    .ToList();
                 model.VotedUsers = allUsers.Where(x => voters.Contains(x.Id))
-                    .Select(x => new {UserId = x.Id, UserName = $"{x.FirstName} {x.LastName}"}).ToList();
+                    .Select(x => new {UserId = x.Id, UserName = $"{x.FirstName} {x.LastName}"})
+                    .ToList();
                 model.PollName = poll.Name;
                 model.PollId = pollId;
             }
@@ -163,8 +174,8 @@ namespace Decidehub.Web.Services
             var hasActiveAuthorityPoll = await _pollService.HasActivePollOfType<AuthorityPoll>();
             var processedByRole = await _userService.GetUserRoles(userId);
 
-            return (latestAuthorityVote == null || !hasActiveAuthorityPoll) &&
-                processedByRole.Any(x => x.Name == "Admin");
+            return (latestAuthorityVote == null || !hasActiveAuthorityPoll)
+                   && processedByRole.Any(x => x.Name == "Admin");
         }
 
         public async Task<DateTime?> GetNextAuthorityPollStartDate()

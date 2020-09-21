@@ -91,7 +91,7 @@ namespace Decidehub.Web.Controllers.Api
         [ProducesResponseType(typeof(ErrorViewModel), 400)]
         [Route("vote")]
         [HttpPost]
-        public async Task<IActionResult> Vote([FromBody] SharePollViewModel model)
+        public async Task<IActionResult> Vote([FromBody] SharePollVoteModel model)
         {
             if (ModelState.IsValid)
             {
@@ -123,14 +123,14 @@ namespace Decidehub.Web.Controllers.Api
                     return BadRequest(Errors.GetErrorList(ModelState));
                 }
 
-                if (model.Users.Sum(v => v.SharePercent) != 100)
+                if (model.Options.Sum(v => v.SharePercent) != 100)
                 {
                     ModelState.AddModelError("", _localizer["VoteSumError"]);
                     return BadRequest(Errors.GetErrorList(ModelState));
                 }
 
                 model.UserId = userId;
-                await _pollViewModelService.SaveSharePoll(model);
+                await _pollViewModelService.SaveSharePollVotes(model);
                 var result = _mapper.Map<Poll, PollListViewModel>(poll);
                 result.UserVoted = true;
                 return Ok(result);

@@ -102,6 +102,23 @@ namespace UnitTests.Services
         }
 
         [Fact]
+        public async Task Should_Create_SharePoll()
+        {
+            var model = new SharePollViewModel
+            {
+                Name = "test",
+                Options = new List<string> {"a", "b", "c"},
+                Description = "test dec"
+            };
+            var poll = await _pollApiViewModelService.NewSharePoll(model);
+            var result = _context.SharePolls.FirstOrDefault(x => x.Id == poll.Id);
+            Assert.NotNull(result);
+            Assert.Equal(model.Name, result.Name);
+            Assert.Equal(JsonConvert.SerializeObject(model.Options), result.OptionsJsonString);
+            Assert.Equal(model.Description, result.QuestionBody);
+        }
+
+        [Fact]
         public async Task Should_Create_PolicyChangePoll()
         {
             var model = new PolicyChangePollViewModel
@@ -286,28 +303,30 @@ namespace UnitTests.Services
         [Fact]
         public async Task Should_SaveSalaryVotes()
         {
-            var users = new List<SharePollUserValuesViewModel>
+            var options = new List<SharePollVoteValuesModel>
             {
-                new SharePollUserValuesViewModel
+                new SharePollVoteValuesModel
                 {
-                    UserId = 2.ToString(),
+                    Option = "a",
                     SharePercent = 40
                 },
-                new SharePollUserValuesViewModel
+                new SharePollVoteValuesModel
                 {
-                    UserId = 3.ToString(),
+                    Option = "b",
                     SharePercent = 60
                 }
             };
-            var model = new SharePollViewModel
+            var model = new SharePollVoteModel
             {
                 PollId = 1,
                 UserId = 1.ToString(),
-                Users = users
+                Options = options
             };
-            await _pollApiViewModelService.SaveSharePoll(model);
+
+            await _pollApiViewModelService.SaveSharePollVotes(model);
             var result = _context.Votes.Where(x => x.PollId == 1);
             Assert.Equal(2, result.Count());
+            Assert.Equal(new[] {"a", "b"}, result.Select(r => r.VotedUserId));
         }
     }
 }

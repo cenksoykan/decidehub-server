@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Decidehub.Web.ViewModels.Api
 {
     public class SharePollViewModel : PollListViewModel
     {
-        public List<SharePollUserValuesViewModel> Users { get; set; }
-        public bool IsPublic { get; set; }
+        [Required] public List<string> Options { get; set; }
     }
 }

@@ -53,6 +53,8 @@ namespace Decidehub.Web.MappingProfiles
                 .ForMember(dest => dest.Description, opts => opts.MapFrom(src => src.QuestionBody))
                 .ForMember(dest => dest.Type,
                     opts => opts.MapFrom(src => src.PollType.ToString().FirstCharacterToLower()))
+                .ForMember(dest => dest.Options,
+                    opts => opts.MapFrom(src => JsonConvert.DeserializeObject<List<string>>(src.OptionsJsonString)))
                 .ForMember(dest => dest.Result, opts => opts.MapFrom(src => GetResult(src.Result)))
                 .ForMember(dest => dest.StartedBy,
                     opts => opts.MapFrom(src =>
