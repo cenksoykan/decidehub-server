@@ -5,6 +5,12 @@
       <LangVersion>latest</LangVersion>
       <RootNamespace>Decidehub.Web</RootNamespace>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>Decidehub.Web.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DocumentationFile>bin\Release\Decidehub.Web.xml</DocumentationFile>
+  </PropertyGroup>
   <ItemGroup>
     <None Remove="Views\Shared\CustomUIIndex.Swagger.index.html" />
   </ItemGroup>

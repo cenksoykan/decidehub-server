@@ -68,6 +68,13 @@
             <response code="200">Date</response>
             <response code="400">Error model</response>
         </member>
+        <member name="M:Decidehub.Web.Controllers.Api.MemberController.Get">
+            <summary>
+                Gets member list
+            </summary>
+            <returns>Member List</returns>
+            <response code="200">Member List</response>
+        </member>
         <member name="M:Decidehub.Web.Controllers.Api.ApiMultipleChoicePollController.NewMultipleChoicePoll(Decidehub.Web.ViewModels.Api.MultipleChoicePollViewModel)">
             <summary>
                 Starts new Multiple Choice Poll
@@ -244,7 +251,7 @@
             <response code="200"> started poll info </response>
             <response code="400">Error model</response>
         </member>
-        <member name="M:Decidehub.Web.Controllers.Api.ApiSharePollController.Vote(Decidehub.Web.ViewModels.Api.SharePollViewModel)">
+        <member name="M:Decidehub.Web.Controllers.Api.ApiSharePollController.Vote(Decidehub.Web.ViewModels.Api.SharePollVoteModel)">
             <summary>
                 Adds user votes for sharePoll
             </summary>
