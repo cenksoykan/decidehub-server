@@ -22,7 +22,7 @@ namespace Decidehub.Core.Entities
         [Display(Name = "Oylayan")] [Required] public string VoterId { get; set; }
 
         public DateTime VotedAt { get; set; }
-        public string TenantId { get; set; }R
+        public string TenantId { get; set; }
         public virtual ApplicationUser Voter { get; set; }
         public virtual Poll Poll { get; set; }
     }
