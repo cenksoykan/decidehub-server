@@ -103,7 +103,108 @@ namespace UnitTests.Controllers
                 }
             };
 
-            const string key = "AuthoriyPollSumError";
+            const string key = "AuthorityPollSumError";
+            var localizedString = new LocalizedString(key, key);
+            _authorityLocalizerMock.Setup(_ => _[key]).Returns(localizedString);
+            var result = await _controller.Vote(model);
+            var actionResult = Assert.IsType<BadRequestObjectResult>(result);
+            var actionResultList = actionResult.Value as List<ErrorViewModel>;
+            Assert.Equal(key, actionResultList[0].Description);
+        }   
+        
+        [Fact]
+        public async Task Should_Reject_SelfVotes()
+        {
+            var poll = new AuthorityPoll
+            {
+                Name = "AuthorityPoll test",
+                Active = true,
+                CreateTime = DateTime.UtcNow.AddHours(1),
+                Deadline = DateTime.UtcNow.AddDays(1),
+                QuestionBody = "AuthorityPoll test"
+            };
+            _context.Polls.Add(poll);
+            _context.SaveChanges();
+            var model = new AuthorityPollSaveViewModel
+            {
+                PollId = poll.Id,
+                Votes = new List<AuthorityPollUserValues>
+                {
+                    new AuthorityPollUserValues
+                    {
+                        UserId = 1.ToString(), Value = 1000
+                    }
+                }
+            };
+
+            const string key = "AuthorityPollInvalidVoteError";
+            var localizedString = new LocalizedString(key, key);
+            _authorityLocalizerMock.Setup(_ => _[key]).Returns(localizedString);
+            var result = await _controller.Vote(model);
+            var actionResult = Assert.IsType<BadRequestObjectResult>(result);
+            var actionResultList = actionResult.Value as List<ErrorViewModel>;
+            Assert.Equal(key, actionResultList[0].Description);
+        } 
+        [Fact]
+        public async Task Should_Reject_NegativeVotes()
+        {
+            var poll = new AuthorityPoll
+            {
+                Name = "AuthorityPoll test",
+                Active = true,
+                CreateTime = DateTime.UtcNow.AddHours(1),
+                Deadline = DateTime.UtcNow.AddDays(1),
+                QuestionBody = "AuthorityPoll test"
+            };
+            _context.Polls.Add(poll);
+            _context.SaveChanges();
+            var model = new AuthorityPollSaveViewModel
+            {
+                PollId = poll.Id,
+                Votes = new List<AuthorityPollUserValues>
+                {
+                    new AuthorityPollUserValues
+                    {
+                        UserId = 2.ToString(), Value = -1
+                    }
+                }
+            };
+
+            const string key = "AuthorityPollInvalidVoteError";
+            var localizedString = new LocalizedString(key, key);
+            _authorityLocalizerMock.Setup(_ => _[key]).Returns(localizedString);
+            var result = await _controller.Vote(model);
+            var actionResult = Assert.IsType<BadRequestObjectResult>(result);
+            var actionResultList = actionResult.Value as List<ErrorViewModel>;
+            Assert.Equal(key, actionResultList[0].Description);
+        } 
+        
+        [Fact]
+        public async Task Should_Reject_VotesOutOfRange()
+        {
+            var poll = new AuthorityPoll
+            {
+                Name = "AuthorityPoll test",
+                Active = true,
+                CreateTime = DateTime.UtcNow.AddHours(1),
+                Deadline = DateTime.UtcNow.AddDays(1),
+                QuestionBody = "AuthorityPoll test"
+            };
+            _context.Polls.Add(poll);
+            _context.SaveChanges();
+            var model = new AuthorityPollSaveViewModel
+            {
+                PollId = poll.Id,
+                Votes = new List<AuthorityPollUserValues>
+                {
+                    new AuthorityPollUserValues
+                    {
+                        UserId = 2.ToString(), Value = 1001
+                    }
+                }
+            };
+
+            const string key = "AuthorityPollInvalidVoteError";
             var localizedString = new LocalizedString(key, key);
             _authorityLocalizerMock.Setup(_ => _[key]).Returns(localizedString);
             var result = await _controller.Vote(model);

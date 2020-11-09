@@ -162,4 +162,7 @@
   <data name="VoteSumError" xml:space="preserve">
     <value>Oyların toplamı 100 olmalıdır</value>
   </data>
+  <data name="InvalidVoteError" xml:space="preserve">
+    <value>Geçersiz oy değeri</value>
+  </data>
 </root>

@@ -133,12 +133,18 @@ namespace Decidehub.Web.Controllers.Api
                     return BadRequest(Errors.GetErrorList(ModelState));
                 }
 
-                if (model.Votes.Sum(v => v.Value) != 1000)
+                if (model.Votes.Any(v => v.Value < 0 || v.Value > 1000 || v.UserId == voterId))
                 {
-                    ModelState.AddModelError("", _localizer["AuthoriyPollSumError"]);
+                    ModelState.AddModelError("", _localizer["AuthorityPollInvalidVoteError"]);
                     return BadRequest(Errors.GetErrorList(ModelState));
                 }
 
+                if (model.Votes.Sum(v => v.Value) != 1000)
+                {
+                    ModelState.AddModelError("", _localizer["AuthorityPollSumError"]);
+                    return BadRequest(Errors.GetErrorList(ModelState));
+                }
+                
                 await _pollViewModelService.SaveAuthorityVote(model, voterId);
                 var result = _mapper.Map<Poll, PollListViewModel>(poll);
                 result.UserVoted = true;

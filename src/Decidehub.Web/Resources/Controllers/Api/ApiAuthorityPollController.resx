@@ -129,8 +129,11 @@
   <data name="AuthorityPollUserInitialAuthorityError" xml:space="preserve">
     <value>Yetki dağılımı oylaması başlatmak için bir kullanıcının başlangıç yetki oranı, dağıtılacak toplam yetkinin 3te birinden fazla olamaz.</value>
   </data>
-  <data name="AuthoriyPollSumError" xml:space="preserve">
+  <data name="AuthorityPollSumError" xml:space="preserve">
     <value>Oyların toplamı 1000 olmalıdır</value>
+  </data>
+  <data name="AuthorityPollInvalidVoteError" xml:space="preserve">
+    <value>Geçersiz oy değeri</value>
   </data>
   <data name="FirstAuthorityPollHaventStarted" xml:space="preserve">
     <value>İlk yetki dağılım oylaması henüz başlatılmadı.</value>

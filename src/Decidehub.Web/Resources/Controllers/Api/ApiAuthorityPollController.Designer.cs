@@ -96,9 +96,9 @@ namespace Decidehub.Web.Resources.Controllers.Api {
         /// <summary>
         ///   Looks up a localized string similar to Oyların toplamı 1000 olmalıdır.
         /// </summary>
-        public static string AuthoriyPollSumError {
+        public static string AuthorityPollSumError {
             get {
-                return ResourceManager.GetString("AuthoriyPollSumError", resourceCulture);
+                return ResourceManager.GetString("AuthorityPollSumError", resourceCulture);
             }
         }
         

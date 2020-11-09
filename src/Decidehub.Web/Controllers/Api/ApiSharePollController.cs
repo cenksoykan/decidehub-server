@@ -60,8 +60,8 @@ namespace Decidehub.Web.Controllers.Api
                 return BadRequest(Errors.GetErrorList(ModelState));
             }
 
-            if (latestAuthorityPoll.Result == "Kararsız" ||
-                latestAuthorityPoll.Result == PollResults.Undecided.ToString())
+            if (latestAuthorityPoll.Result == "Kararsız"
+                || latestAuthorityPoll.Result == PollResults.Undecided.ToString())
             {
                 ModelState.AddModelError("", _localizer["CantStartPollBeforeAuthorityComplete"]);
                 return BadRequest(Errors.GetErrorList(ModelState));
@@ -120,6 +120,12 @@ namespace Decidehub.Web.Controllers.Api
                 if (userVoted)
                 {
                     ModelState.AddModelError("", _localizer["PollRecordExist"]);
+                    return BadRequest(Errors.GetErrorList(ModelState));
+                }
+
+                if (model.Options.Any(v => v.SharePercent < 0 || v.SharePercent > 100))
+                {
+                    ModelState.AddModelError("", _localizer["InvalidVoteError"]);
                     return BadRequest(Errors.GetErrorList(ModelState));
                 }
 
